@@ -15,8 +15,8 @@ App
   .use(logger())
   .use(cors())
 
-  .use(mount("/", static_pages))
-    static_pages.use(serve(__dirname + "/front-end/build"))
+  // .use(mount("/", static_pages))
+  //   static_pages.use(serve(__dirname + "/front-end/build"))
 
   .use(router.routes())
   .use(router.allowedMethods())
