@@ -1,0 +1,13 @@
+const HttpStatus = require("http-status");
+
+const exampleGetController = async(ctx,next) => {
+  console.log("exampleGetController() Init");
+
+  let responseMessage = "Hello World";
+
+  ctx.status = HttpStatus.OK;
+  ctx.body = responseMessage;
+  await next();
+}
+
+module.exports = { exampleGetController }

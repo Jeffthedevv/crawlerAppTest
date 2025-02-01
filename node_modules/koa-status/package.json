@@ -1,0 +1,27 @@
+{
+  "name": "koa-status",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/QubitProducts/koa-status.git"
+  },
+  "description": "Installs a /status endpoint that will always respond with 200 if the server is up.",
+  "main": "koa-status.js",
+  "author": "Rob Tod <roberttod@gmail.com>",
+  "scripts": {
+    "test": "make test"
+  },
+  "keywords": [
+    "koa",
+    "middleware",
+    "status"
+  ],
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^3.3.0",
+    "koa": "^1.0.0",
+    "mocha": "^2.3.3",
+    "request-promise": "^0.4.3",
+    "standard": "^5.3.1"
+  }
+}
