@@ -1,11 +1,13 @@
+require("dotenv").config(); //Load environment variables at the very beginning
+
 const Koa = require("koa");
 const parser = require("koa-bodyparser");
 const router = require("./router");
 const logger = require("koa-logger")
 const cors = require("@koa/cors");
-const connectDB = require("./db"); 
 
-const startCrawler = require("./crawler/main"); // Import the crawler function
+const connectDB = require("./db"); // Import the DB connection module.
+const startCrawler = require("./crawler/main"); // Import the crawler module.
 
 const App = new Koa();
 const PORT = process.env.PORT || 3000;
@@ -29,6 +31,7 @@ App
 
       console.log("🚀 Starting crawler...");
       await startCrawler(); // ✅ Runs the crawler asynchronously
+
       console.log("✅ Crawler started successfully.");
     } catch (error) {
         console.error("❌ Crawler failed to start:", error);

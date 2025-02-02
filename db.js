@@ -1,10 +1,18 @@
+require("dotenv"); // Load environment variables\
+
 const mongoose = require("mongoose");
 
-const MONGO_URI = process.env.MONGO_URL || ''; /// test string 
+/**
+* Connection URI. Update <username>, <password>, and <your-cluster-url> to reflect your cluster.
+* See https://docs.mongodb.com/ecosystem/drivers/node/ for more details
+*/
 
 async function connectDB() {
+
+  const MONGO_URL = process.env.MONGO_URL // Ideally there would be a "or statement here as a fallback"
+
   try {
-    await  mongoose.connect(MONGO_URI, {
+    await  mongoose.connect( process.env.MONGO_URL, {
       //PARAMS
     });
     console.log("✅ MongoDB Connected Successfully");
