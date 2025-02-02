@@ -9,7 +9,7 @@ const mongoose = require("mongoose");
 
 async function connectDB() {
 
-  const MONGO_URL = process.env.MONGO_URL // Ideally there would be a "or statement here as a fallback"
+  // const MONGO_URL = process.env.MONGO_URL // Ideally there would be a "or statement here as a fallback"
 
   try {
     await  mongoose.connect( process.env.MONGO_URL, {
