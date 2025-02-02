@@ -3,6 +3,7 @@ const parser = require("koa-bodyparser");
 const router = require("./router");
 const logger = require("koa-logger")
 const cors = require("@koa/cors");
+const connectDB = require("./db"); 
 
 const startCrawler = require("./crawler/main"); // Import the crawler function
 
@@ -23,9 +24,12 @@ App
     // this can be done using an endpoint trigger instead. 
 
     try {
-        console.log("🚀 Starting crawler...");
-        await startCrawler(); // ✅ Runs the crawler asynchronously
-        console.log("✅ Crawler started successfully.");
+      console.log("🚀 Connecting to MongoDB...");
+      await connectDB(); // ✅ Connect to MongoDB before starting the server
+
+      console.log("🚀 Starting crawler...");
+      await startCrawler(); // ✅ Runs the crawler asynchronously
+      console.log("✅ Crawler started successfully.");
     } catch (error) {
         console.error("❌ Crawler failed to start:", error);
     }
