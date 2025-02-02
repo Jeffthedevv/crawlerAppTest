@@ -19,7 +19,8 @@ async function startCrawler() {
       if (lastSegment.includes('-')) {
 
         const title = await page.title();
-        // const content = await page.locator('article.field--item').innerText();
+        const content = await page.locator('article').innerText();
+        const numbers = await page.locator('.field--name-field-fr-standard-number').innerText();
         // const date = await page.locator('.field--type-text-with-summary p').innerText();
         // // const number = await page.locator('.letter-number').innerText();
         // // const dateText = await page.locator('.letter-date').innerText();
@@ -29,7 +30,7 @@ async function startCrawler() {
         // const date = new Date(dateText);
 
         // const letterData = { title };
-        console.log(`\nPage Title: ${String(title)}`);
+        console.log(`\nPage Title: ${String(title)}\nContent: ${content}\nNumbers: ${numbers}`);
 
         // // await pushData(letterData);
 
