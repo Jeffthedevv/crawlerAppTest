@@ -13,7 +13,8 @@ async function connectDB() {
 
   try {
     await  mongoose.connect( process.env.MONGO_URL, {
-      //PARAMS
+      useNewUrlParser: true,
+      useUnifiedTopology: true
     });
     console.log("✅ MongoDB Connected Successfully");
     } catch (error) {
