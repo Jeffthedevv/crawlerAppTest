@@ -12,6 +12,7 @@
   "dependencies": {
     "@koa/cors": "^3.4.3",
     "axios": "^1.4.0",
+    "crawlee": "^3.12.2",
     "http-status": "^1.6.2",
     "koa": "^2.14.2",
     "koa-bodyparser": "^4.4.1",
