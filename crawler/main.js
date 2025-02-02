@@ -1,4 +1,3 @@
-// For more information, see https://crawlee.dev/
 const { PlaywrightCrawler } = require('crawlee');
 
 // PlaywrightCrawler crawls the web using a headless
@@ -10,31 +9,73 @@ async function startCrawler() {
 
     async requestHandler({  request, page, enqueueLinks, log, pushData }) {
         const url = request.loadedUrl;
-        const title = await page.title();
-
         log.info(`Scraping data from: ${url}`);
 
+        const segments = url.split('/');
+        const lastSegment = segments[segments.length - 1];  // Get the last segment of the URL
 
-        // Extract each pages data 
-        const pagesData = await page.$$eval('.views-row', (rows) => {
-            return rows.map(row => {
-                const title = row.querySelector('.field-content h3')?.innerText.trim();
-                const number = row.querySelector('.field-content .field-item')?.innerText.trim(); // Letter number
-                const dateText = row.querySelector('.field-content .date')?.innerText.trim(); // Publication date
-                const content = row.querySelector('.field-content .field-item')?.innerText.trim(); // Content
 
-                // Format the date
-                const date = new Date(dateText);
+      // Step 1: If we are on a year-specific page (e.g., /publicationdate/2024)
+      if (lastSegment.includes('-')) {
 
-                log.info("Crawled Page Data Title: ", title, "\nnumber: ", number, "\ndateText: ", dateText, "\ncontent: ", content)
+        const title = await page.title();
+        // const content = await page.locator('article.field--item').innerText();
+        // const date = await page.locator('.field--type-text-with-summary p').innerText();
+        // // const number = await page.locator('.letter-number').innerText();
+        // // const dateText = await page.locator('.letter-date').innerText();
+        // // const content = await page.locator('.letter-content').innerText();
 
-                return { title, number, date, content };
-            });
+        // // Format the date
+        // const date = new Date(dateText);
+
+        // const letterData = { title };
+        console.log(`\nPage Title: ${String(title)}`);
+
+        // // await pushData(letterData);
+
+      } else {  // Step 2: If we are on an individual letter page
+
+          
+         // Extract the links to individual letter pages on the year-specific page
+         await enqueueLinks({
+          selector: '.view-field a', // Select links to individual letter pages
+          baseUrl: 'https://www.osha.gov/laws-regs/standardinterpretations/publicationdate', // Ensure base URL is set correctly for relative links
         });
 
-        // log.info("Page Crawled: ", title, "\nContent", pagesData.data);
+        const title = await page.title();
+        const segments = url.split('/');
+        const year = segments[segments.length - 1]; // Last segment of the URL
+        const content = await page.locator('.view-standard-interpretations .view-content').innerText();
+ 
+        log.info(`\nPage Title: ${String(title)}\nYear: ${year}`);
 
-        // Save each page data to MongoDB
+        // Optionally push the data into the crawlee dataset storage
+        // await pushData(pagesData);
+        
+      } //! End Conditional
+
+
+        // Extract the links to individual letter pages on the year-specific page
+        await enqueueLinks({
+          selector: '.view-content a', // Select links to individual letter pages
+          baseUrl: url, // Ensure base URL is set correctly for relative links
+        });
+      },
+        maxRequestsPerCrawl: 100,   // Optional: limit to 100 pages or letters
+        headless: true,             // Use headless mode for crawling
+    });
+
+    // Run the crawler on the OSHA URL
+    await crawler.run(['https://www.osha.gov/laws-regs/standardinterpretations/publicationdate']);     // Use headless mode for crawling
+}
+
+startCrawler().catch(console.error)
+
+module.export = startCrawler; 
+
+
+
+ // Save each page data to MongoDB
         // for (const page of pagesData) {
         //     if (page.title && page.number && page.date && page.content) {
         //         try {
@@ -45,24 +86,3 @@ async function startCrawler() {
         //         }
         //     }
         // }
-
-        // Optionally push the data into the crawlee dataset storage
-        // await pushData(pagesData);
-
-        await enqueueLinks({
-          selector: '.view-content a', // The class selector I used to target the publications wrapper element links. 
-          baseUrl: url, // the base url for relative paths following the selector link.
-        });
-
-      },
-        maxRequestsPerCrawl: 100,   // Optional: limit to 100 pages or letters
-        headless: false,             // Use headless mode for crawling
-    });
-
-    // Run the crawler on the OSHA URL
-    await crawler.run(['https://www.osha.gov/laws-regs/standardinterpretations/publicationdate']);     // Use headless mode for crawling
-}
-
-startCrawler().catch(console.error)
-
-module.export = startCrawler; 
