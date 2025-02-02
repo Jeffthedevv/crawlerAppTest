@@ -1,4 +1,4 @@
-require("dotenv").config(); //Load environment variables at the very beginning
+require("dotenv").config(); // Load environment variables at the very beginning
 
 const Koa = require("koa");
 const parser = require("koa-bodyparser");
