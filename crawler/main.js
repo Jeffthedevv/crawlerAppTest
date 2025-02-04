@@ -23,7 +23,7 @@ async function startCrawler() {
       //?NOTE: Going to disable this crawl and concentrate on the single page first. 
       //?      Just replace the includes back to ('-'), chicken is garbage data. 
 
-      if (lastSegment.includes('chicken')) {
+      if (lastSegment.includes('-')) {
 
         const title = await page.title();
         const content = await page.locator('article').innerText();
@@ -80,21 +80,21 @@ async function startCrawler() {
         // }
 
       } else { // Base URL
-
+        console.log("BASE URL CONDITIONAL TRIGGERD");
         const title = await page.title();
-    
         const content = await page.locator('.view-standard-interpretations .view-content').innerHTML();
-        const $ = cheerio.load(content)
+
+        const $ = cheerio.load(content);
 
         let publicationData = [];
 
-        $('ul li').each((index, element) => {
+        $('ul li').each((element) => {
             let year = $(element).text().trim(); // Extract text (year) inside <li>
             let link = $(element).find('a').attr('href'); // Extract href link
+
             let fullLink = 'https://www.osha.gov' + link;
             publicationData.push({ year, fullLink });
         });
-
 
         // Save the data to MongoDB
         const newPage = new BasePage({
@@ -118,9 +118,7 @@ async function startCrawler() {
           baseUrl: url, // Ensure base URL is set correctly for relative links
         });
       },
-        minConcurrency: 1,
-        maxConcurrency: 2,
-        requestHandlerTimeoutSecs: 5, // Slow the Request Rate Down. 
+      
         maxRequestsPerCrawl: 1,       // Optional: limit to 100 pages or letters
         headless: true,               // Use headless mode for crawling
     });
